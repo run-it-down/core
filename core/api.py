@@ -3,10 +3,12 @@ import requests
 
 import falcon
 
-import common.util
+try:
+    import util
+except ModuleNotFoundError:
+    print('common package not in python path')
 
-
-logger = common.util.Logger(__name__)
+logger = util.Logger(__name__)
 
 
 CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/summoner'
@@ -41,7 +43,7 @@ class Solo:
             params = {
                 'summoner': body['summonerName']
             }
-            report = requests.get(url=common.util.urljoin(REPORT_ENDPOINT, '/solo'), params=params)
+            report = requests.get(url=util.urljoin(REPORT_ENDPOINT, '/solo'), params=params)
         else:
             logger.error('calling crawler failed')
 
