@@ -37,7 +37,7 @@ class Solo:
             'endpoint': 'https://euw1.api.riotgames.com/'
         }
         logger.info('calling crawler')
-        res = requests.post(url=CRAWLER_ENDPOINT, data=data, header=header)
+        res = requests.post(url=CRAWLER_ENDPOINT, data=data, headers=header)
 
         # get report
         if res.status_code == 201:
