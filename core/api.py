@@ -36,12 +36,8 @@ class Main:
         )
 
         # execute crawler
-        # TODO remove hardcoded range
-        if not req.headers.get['X-RIOT-TOKEN']:
-            resp.body = 'invalid X-Riot-Token'
-            return
         header = {
-            'X-Riot-Token': req.headers.get['X-RIOT-TOKEN'],
+            'X-Riot-Token': req.headers['X-RIOT-TOKEN'],
             'endpoint': 'https://euw1.api.riotgames.com/'
         }
         logger.info('calling crawler')
