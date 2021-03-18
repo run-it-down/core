@@ -1,3 +1,4 @@
+import datetime
 import json
 import requests
 import urllib3
@@ -5,6 +6,7 @@ import urllib3
 import falcon
 
 try:
+    import model
     import util
 except ModuleNotFoundError:
     print('common package not in python path')
@@ -12,53 +14,52 @@ except ModuleNotFoundError:
 logger = util.Logger(__name__)
 
 
-CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/summoner'
-REPORT_ENDPOINT = 'https://crawler.run-it-down.lol/report'
+CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/'
+REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
 
 
-class Solo:
+class Main:
 
     def on_post(self, req, resp):
-        logger.info('POST /analyze/solo')
+        logger.info('calling core')
         body = json.loads(req.stream.read())
 
         # surpress tls check
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+        # parse request
+        rr = model.AnalyseRequest(
+            summoner_name=body['summonerName'],
+            summoner_name_buddy=body['summonerNameBuddy'],
+            request_time=datetime.datetime.now().isoformat(),
+            analyse_range=(body['startIndex'], body['endIndex']) if body.get('startIndex') and body.get('endIndex') else None,
+        )
+
         # execute crawler
         # TODO remove hardcoded range
-        data = {
-            'summonerName': body['summonerName'],
-            'startIndex': '0',
-            'endIndex': '10'
-        }
         header = {
             'X-Riot-Token': body['XRiotToken'],
             'endpoint': 'https://euw1.api.riotgames.com/'
         }
         logger.info('calling crawler')
-        res = requests.post(url=CRAWLER_ENDPOINT, data=data, headers=header)
+        for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
+            data = {
+                'summonerName': summoner_name,
+                'startIndex': rr.analyse_range[0] if rr.analyse_range,
+                'endIndex': rr.analyse_range[1] if rr.analyse_range,
+            }
+            requests.post(url=CRAWLER_ENDPOINT, data=data, headers=header)
 
         # get report
-        if res.status_code == 201:
-            params = {
-                'summoner': body['summonerName']
-            }
-            report = requests.get(url=util.urljoin(REPORT_ENDPOINT, '/solo'), params=params)
-        else:
-            logger.error('calling crawler failed')
+        report = requests.get(url=REPORT_ENDPOINT, params={'summonerName': rr.summoner_name})
 
         # return report
-        if report.status_code == 201:
-            resp.body = report.content
-            resp.status_code = 201
-        else:
-            logger.error('no report returned')
+        resp.body = report.content
 
 
 def create():
     api = falcon.API()
-    api.add_route('/analyze/solo', Solo())
+    api.add_route('/', Main())
     logger.info('falcon initialized')
     return api
 
