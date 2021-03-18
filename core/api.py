@@ -45,9 +45,10 @@ class Main:
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
             data = {
                 'summonerName': summoner_name,
-                'startIndex': rr.analyse_range[0] if rr.analyse_range,
-                'endIndex': rr.analyse_range[1] if rr.analyse_range,
             }
+            if rr.analyse_range:
+                data['startIndex'] = rr.analyse_range[0]
+                data['endIndex'] = rr.analyse_range[1]
             requests.post(url=CRAWLER_ENDPOINT, data=data, headers=header)
 
         # get report
