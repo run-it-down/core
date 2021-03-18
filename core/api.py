@@ -32,7 +32,6 @@ class Main:
             summoner_name=body['summonerName'],
             summoner_name_buddy=body['summonerNameBuddy'],
             request_time=datetime.datetime.now().isoformat(),
-            analyse_range=(body['startIndex'], body['endIndex']) if body.get('startIndex') and body.get('endIndex') else None,
         )
 
         # execute crawler
@@ -42,13 +41,7 @@ class Main:
         }
         logger.info('calling crawler')
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
-            data = {
-                'summonerName': summoner_name,
-            }
-            if rr.analyse_range:
-                data['startIndex'] = rr.analyse_range[0]
-                data['endIndex'] = rr.analyse_range[1]
-            requests.post(url=CRAWLER_ENDPOINT, data=data, headers=header)
+            requests.post(url=CRAWLER_ENDPOINT, data={'summonerName': summoner_name,}, headers=header)
 
         # get report
         report = requests.get(url=REPORT_ENDPOINT, params={'summonerName': rr.summoner_name})
