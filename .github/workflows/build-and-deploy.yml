@@ -8,7 +8,7 @@ on:
     - master
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout core
@@ -47,3 +47,20 @@ jobs:
           secrets: |
             GIT_AUTH_TOKEN=${{ github.token }}
 
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.API_ENDPOINT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY_OF_NETCUP }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          script: |
+            sudo docker login https://ghcr.io -u zkdev --password ${{ secrets.ZKDEV_PACKAGE_ACTIONS }}
+            sudo docker stop run-it-down-core
+            sudo docker rm run-it-down-core
+            sudo docker pull ghcr.io/run-it-down/core:latest
+            sudo docker run -dit --name run-it-down-core --net host ghcr.io/run-it-down/core:latest
