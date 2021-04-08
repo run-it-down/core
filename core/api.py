@@ -40,7 +40,8 @@ class Main:
         }
         logger.info('calling crawler')
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
-            requests.post(url=CRAWLER_ENDPOINT, json={'summonerName': summoner_name, }, headers=header)
+            res = requests.post(url=CRAWLER_ENDPOINT, json={'summonerName': summoner_name, }, headers=header)
+            logger.info(res)
 
         logger.info('calling reporter')
         # get report
