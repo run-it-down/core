@@ -42,9 +42,12 @@ class Main:
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
             requests.post(url=CRAWLER_ENDPOINT, json={'summonerName': summoner_name, }, headers=header)
 
+        logger.info('calling reporter')
         # get report
         report = requests.get(url=REPORT_ENDPOINT,
                               params={'summoner1': rr.summoner_name, 'summoner2': rr.summoner_name_buddy})
+
+        logger.info(report)
 
         # return report
         resp.body = report.content
