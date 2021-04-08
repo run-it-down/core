@@ -47,10 +47,8 @@ class Main:
         report = requests.get(url=REPORT_ENDPOINT,
                               params={'summoner1': rr.summoner_name, 'summoner2': rr.summoner_name_buddy})
 
-        logger.info(report.text)
-
         # return report
-        resp.body = report.content
+        resp.body = report.text
 
 
 def create():
