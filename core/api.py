@@ -13,7 +13,6 @@ except ModuleNotFoundError:
 
 logger = util.Logger(__name__)
 
-
 CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/'
 REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
 
@@ -41,10 +40,11 @@ class Main:
         }
         logger.info('calling crawler')
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
-            requests.post(url=CRAWLER_ENDPOINT, json={'summonerName': summoner_name,}, headers=header)
+            requests.post(url=CRAWLER_ENDPOINT, json={'summonerName': summoner_name, }, headers=header)
 
         # get report
-        report = requests.get(url=REPORT_ENDPOINT, params={'summonerName': rr.summoner_name})
+        report = requests.get(url=REPORT_ENDPOINT,
+                              params={'summoner1': rr.summoner_name, 'summoner2': rr.summoner_name_buddy})
 
         # return report
         resp.body = report.content
