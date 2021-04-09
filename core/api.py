@@ -42,8 +42,6 @@ class Analyze:
             params={'summoner1': rr.summoner_name, 'summoner2': rr.summoner_name_buddy},
         )
 
-        print(f'{report=}')
-
         # return report
         logger.info('reporting done')
         resp.text = report.content
