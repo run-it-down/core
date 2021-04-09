@@ -24,15 +24,19 @@ class Analyze:
 
     def on_get(self, req, resp):
         logger.info('/GET analyze')
-        body = json.loads(req.stream.read())
+
+        params = req.params
+        if "summonerName" not in params or "summonerNameBuddy" not in params:
+            resp.status = 400
+            return
 
         # surpress tls check
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         # parse request
         rr = model.AnalyseRequest(
-            summoner_name=body['summonerName'],
-            summoner_name_buddy=body['summonerNameBuddy'],
+            summoner_name=params['summonerName'],
+            summoner_name_buddy=params['summonerNameBuddy'],
             request_time=datetime.datetime.now().isoformat(),
         )
         logger.info(f'{rr.summoner_name=}, {rr.summoner_name_buddy=}')
