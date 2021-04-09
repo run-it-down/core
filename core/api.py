@@ -44,7 +44,7 @@ class Analyze:
 
         # return report
         logger.info('reporting done')
-        resp.body = report.text
+        resp.text = report.content
 
 
 class Crawl:
