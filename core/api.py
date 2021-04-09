@@ -43,12 +43,12 @@ class Analyze:
         # check if both summoners exist. if not, return who does not exist
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
             res = requests.get(url=CRAWLER_ENDPOINT, params={'summoner': summoner_name})
-            if res.status_code == falcon.HTTP_NOT_FOUND:
+            if res.status_code == 404:
                 missing_summoners.append(summoner_name)
                 not_found = True
 
         if not_found:
-            resp.status = falcon.HTTP_NOT_FOUND
+            resp.status = 404
             resp.text = {f'{", ".join(missing_summoners)} not existent.'}
             return
 
