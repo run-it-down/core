@@ -15,7 +15,9 @@ logger = util.Logger(__name__)
 
 CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/'
 REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
-#REPORT_ENDPOINT = 'http://127.0.0.1:1338'
+
+
+# REPORT_ENDPOINT = 'http://127.0.0.1:1338'
 
 
 class Analyze:
@@ -34,6 +36,21 @@ class Analyze:
             request_time=datetime.datetime.now().isoformat(),
         )
         logger.info(f'{rr.summoner_name=}, {rr.summoner_name_buddy=}')
+
+        logger.info('check summoner existence')
+        not_found = False
+        missing_summoners = []
+        # check if both summoners exist. if not, return who does not exist
+        for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
+            res = requests.get(url=CRAWLER_ENDPOINT, params={'summoner': summoner_name})
+            if res.status_code == falcon.HTTP_NOT_FOUND:
+                missing_summoners.append(summoner_name)
+                not_found = True
+
+        if not_found:
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.text = {f'{", ".join(missing_summoners)} not existent.'}
+            return
 
         logger.info('calling reporter')
         # get report
