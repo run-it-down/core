@@ -14,7 +14,8 @@ except ModuleNotFoundError:
 logger = util.Logger(__name__)
 
 CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/'
-REPORT_ENDPOINT = 'http://127.0.0.1:1338'
+REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
+#REPORT_ENDPOINT = 'http://127.0.0.1:1338'
 
 
 class Analyze:
