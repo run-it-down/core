@@ -14,7 +14,7 @@ except ModuleNotFoundError:
 logger = util.Logger(__name__)
 
 CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/'
-REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
+REPORT_ENDPOINT = 'http://127.0.0.1:1338'
 
 
 class Main:
@@ -36,12 +36,13 @@ class Main:
         # execute crawler
         header = {
             'X-Riot-Token': req.headers['X-RIOT-TOKEN'],
-            'endpoint': 'https://euw1.api.riotgames.com/'
+            'ENDPOINT': 'https://euw1.api.riotgames.com/'
         }
         logger.info('calling crawler')
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
             res = requests.post(url=CRAWLER_ENDPOINT, json={'summonerName': summoner_name, }, headers=header)
             logger.info(res)
+        logger.info('crawling done')
 
         logger.info('calling reporter')
         # get report
