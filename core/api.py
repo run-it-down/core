@@ -20,7 +20,7 @@ REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
 
 class Analyze:
 
-    def on_post(self, req, resp):
+    def on_get(self, req, resp):
         logger.info('/GET analyze')
         body = json.loads(req.stream.read())
 
