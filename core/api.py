@@ -100,7 +100,7 @@ class Crawl:
 
 
 def create():
-    api = falcon.API(cors_enable=True)
+    api = falcon.App(cors_enable=True)
     api.add_route('/analyze', Analyze())
     api.add_route('/crawl', Crawl())
     logger.info('falcon initialized')
