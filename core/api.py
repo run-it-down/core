@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import requests
 import urllib3
 
@@ -84,7 +85,7 @@ class Crawl:
 
         # parsing token
         header = {
-            'X-Riot-Token': req.headers['X-RIOT-TOKEN'],
+            'X-Riot-Token': os.getenv('RIOT_API_TOKEN'),
             'ENDPOINT': 'https://euw1.api.riotgames.com/'
         }
 
