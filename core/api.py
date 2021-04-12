@@ -17,9 +17,6 @@ CRAWLER_ENDPOINT = 'https://crawler.run-it-down.lol/'
 REPORT_ENDPOINT = 'https://reporter.run-it-down.lol/'
 
 
-# REPORT_ENDPOINT = 'http://127.0.0.1:1338'
-
-
 class Analyze:
 
     def on_get(self, req, resp):
@@ -93,12 +90,11 @@ class Crawl:
 
         logger.info('calling crawler')
         for summoner_name in (rr.summoner_name, rr.summoner_name_buddy):
-            res = requests.post(
+            requests.post(
                 url=CRAWLER_ENDPOINT,
                 json={'summonerName': summoner_name, },
                 headers=header
             )
-            logger.info(res)
         logger.info('crawling done')
 
 
