@@ -12,5 +12,8 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
+ARG RIOT_API_TOKEN
+ENV RIOT_API_TOKEN=$RIOT_API_TOKEN
+
 ENV PYTHONPATH "/core/:/common/common/"
 ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:8004", "core.api", "--timeout", "600"]
