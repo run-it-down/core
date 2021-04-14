@@ -5,6 +5,7 @@ import requests
 import urllib3
 
 import falcon
+import psutil
 
 try:
     import model
@@ -99,10 +100,20 @@ class Crawl:
         logger.info('crawling done')
 
 
+class Status:
+
+    def on_get(self, req, resp):
+        cpu = psutil.cpu_percent()
+        data = '{"cpu": ' + str(cpu) + '}'
+        resp.text = data
+        resp.status = falcon.HTTP_OK
+
+
 def create():
     api = falcon.App(cors_enable=True)
     api.add_route('/analyze', Analyze())
     api.add_route('/crawl', Crawl())
+    api.add_route('/status', Status())
     logger.info('falcon initialized')
     return api
 
